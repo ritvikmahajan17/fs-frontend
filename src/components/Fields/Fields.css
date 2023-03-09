@@ -53,3 +53,8 @@
     background-color: #FFFFFF;
 
 }
+
+.edit-options {
+    display:flex;
+    gap: 10px;
+}

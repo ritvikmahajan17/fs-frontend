@@ -35,3 +35,17 @@ export const PUT_FIELD_BY_TYPENAME = (name) => {
     method:'put'
   };
 };
+
+export const PUT_EDIT_FIELD_BY_TYPENAME = (name) => {
+  return {
+    url:`/type/editField/${name}`,
+    method:'put'
+  };
+};
+
+export const DELETE_FIELD_BY_TYPENAME = (name) => {
+  return {
+    url:`/type/${name}`,
+    method:'delete'
+  };
+};

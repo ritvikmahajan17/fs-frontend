@@ -8,7 +8,7 @@ import { Modal } from '../Modal';
 import makeRequest from '../../utils/makeRequest/makeRequest';
 import { POST_TYPE } from '../../constants/apiEndPoints';
 
-export const ContentType = ({typeData}) => {
+export const ContentType = ({typeData,setTypeData}) => {
 
   const [fieldName, setFieldName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +36,10 @@ export const ContentType = ({typeData}) => {
     })
       .then((response) => {
         console.log(response);
-        window.location.reload();
+        console.log(newType,'newType');
+        // typeData.push(newType);
+        setTypeData([...typeData,{typeName:newType}]);
+        // window.location.reload();
       });
     
     setIsOpen(false);
@@ -106,4 +109,5 @@ export const ContentType = ({typeData}) => {
 
 ContentType.propTypes = {
   typeData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setTypeData: PropTypes.func.isRequired
 };

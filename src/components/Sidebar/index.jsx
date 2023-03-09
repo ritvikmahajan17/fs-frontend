@@ -45,7 +45,7 @@ export const Sidebar = () => {
         </div>
         
       </div>
-      <ContentType typeData={typeData}/>
+      <ContentType key={1}typeData={typeData} setTypeData={setTypeData}/>
     </div>
   );
 };

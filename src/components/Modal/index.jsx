@@ -1,44 +1,44 @@
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { CSSTransition } from 'react-transition-group';
-// import './Modal.css';
+import React from 'react';
+import './Modal.css';
+import propTypes from 'prop-types';
 
-const Modal = props => {
-  const closeOnEscapeKeyDown = e => {
-    if ((e.charCode || e.keyCode) === 27) {
-      props.onClose();
-    }
-  };
-
-  useEffect(() => {
-    document.body.addEventListener('keydown', closeOnEscapeKeyDown);
-    return function cleanup() {
-      document.body.removeEventListener('keydown', closeOnEscapeKeyDown);
-    };
-  }, []);
-
-  return ReactDOM.createPortal(
-    <CSSTransition
-      in={props.show}
-      unmountOnExit
-      timeout={{ enter: 0, exit: 300 }}
-    >
-      <div className="modal" onClick={props.onClose}>
-        <div className="modal-content" onClick={e => e.stopPropagation()}>
-          <div className="modal-header">
-            <h4 className="modal-title">{props.title}</h4>
-          </div>
-          <div className="modal-body">{props.children}</div>
-          <div className="modal-footer">
-            <button onClick={props.onClose} className="button">
-              Close
-            </button>
-          </div>
+function Modal({ setOpenModal }) {
+  return (
+    <div className="modalBackground">
+      <div className="modalContainer">
+        <div className="titleCloseBtn">
+          <button
+            onClick={() => {
+              setOpenModal(false);
+            }}
+          >
+            X
+          </button>
+        </div>
+        <div className="title">
+          <h1>Are You Sure You Want to Continue?</h1>
+        </div>
+        <div className="body">
+          <p>The next page looks amazing. Hope you want to go there!</p>
+        </div>
+        <div className="footer">
+          <button
+            onClick={() => {
+              setOpenModal(false);
+            }}
+            id="cancelBtn"
+          >
+            Cancel
+          </button>
+          <button>Continue</button>
         </div>
       </div>
-    </CSSTransition>,
-    document.getElementById('root')
+    </div>
   );
-};
+}
 
+
+Modal.propTypes = {
+  setOpenModal: propTypes.func.isRequired,
+};
 export default Modal;
