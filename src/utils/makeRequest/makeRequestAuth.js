@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BACKEND_URL } from '../../constants/apiEndPoints';
+import { BACKEND_URL_AUTH } from '../../constants/apiEndPoints';
 
 
 const makeRequest = async (
@@ -8,7 +8,7 @@ const makeRequest = async (
 ) => {
   try {
     const requestDetails = {
-      baseURL: BACKEND_URL,
+      baseURL: BACKEND_URL_AUTH,
       url: apiEndPoint.url,
       method: apiEndPoint.method,
       ...dynamicConfig,
