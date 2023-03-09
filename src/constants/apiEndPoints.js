@@ -23,3 +23,15 @@ export const GET_TYPE_DATA_BY_NAME  = (name) => {
     method:'get'
   };
 };
+
+export const POST_TYPE = {
+  url:'/type',
+  method:'post'
+};
+
+export const PUT_FIELD_BY_TYPENAME = (name) => {
+  return {
+    url:`/type/${name}`,
+    method:'put'
+  };
+};
