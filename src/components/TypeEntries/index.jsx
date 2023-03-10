@@ -136,7 +136,7 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
                   return (
                     <div key={it}className='add-entry-input'>
                       <label key={it}>{it}</label>
-                      <input name={it} type="text" value={entryData[it]}  id={it} />
+                      <input name={it} type="text" placeholder={entryData[it]}  id={it} />
                     </div>
                   );
                 });
