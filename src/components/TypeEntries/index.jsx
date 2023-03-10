@@ -3,13 +3,15 @@ import React, { useEffect, useState } from 'react';
 import './TypeEntries.css';
 import propTypes from 'prop-types';
 import makeRequest from '../../utils/makeRequest/makeRequest';
-import { DELETE_ENTRIES_DATA_BY_ID, GET_ENTRIES_DATA_BY_TYPE, POST_ENTRIES_DATA_BY_TYPE } from '../../constants/apiEndPoints';
+import { DELETE_ENTRIES_DATA_BY_ID, GET_ENTRIES_DATA_BY_TYPE, POST_ENTRIES_DATA_BY_TYPE, UPDATE_ENTRIES_DATA_BY_TYPE } from '../../constants/apiEndPoints';
 
 export const TypeEntries = ({id,name,typeData,setTypeData}) => {
   console.log(id,'id',name,'name');
   //   console.log(typeData.fields,'typeData');
   const [entriesData,setEntriesData] = useState([]);
   const [showAddEntry,setShowAddEntry] = useState(false);
+  const [showUpdateEntry,setShowUpdateEntry] = useState(false);
+  const [entryId,setEntryId] = useState('');
   useEffect(() => {
     makeRequest(GET_ENTRIES_DATA_BY_TYPE(id),{
       headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' }
@@ -28,6 +30,12 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
     const newEntriesData = entriesData.filter((item) => item.id !== id);
     setEntriesData(newEntriesData);
   };
+
+  const handleUpdateEntry = (id) => {
+    setShowUpdateEntry(!showUpdateEntry);
+    setEntryId(id);
+  };
+
 
   const handleAddNewEntry = () => {
     setShowAddEntry(!showAddEntry);
@@ -55,6 +63,33 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
 
     console.log(data.get('fname'));
   };
+
+  const handleUpdateNewEntrySubmit = (e) => {
+    e.preventDefault();
+    const data = {} ;
+    typeData.map((item) => {
+      if(item.id===id)
+        return item.fields.map((it) => {
+          data[it] = e.target[it].value;
+        });
+    });
+    makeRequest(UPDATE_ENTRIES_DATA_BY_TYPE(entryId),{
+      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' },
+      data: {...data}
+    })
+      .then((response) => {
+        console.log(response,'response');
+        const index = entriesData.findIndex((item) => item.id === entryId);
+        console.log(index,'index');
+        console.log(entriesData[index].data,'entries[index].data');
+        {entriesData[index].data = {...data};}
+
+        setEntriesData([...entriesData]);
+
+       
+      });
+  };
+
     
 
 
@@ -70,6 +105,24 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
         </div>
         {showAddEntry && 
         <form onSubmit={handleAddNewEntrySubmit}>
+          <div className='add-entry'>
+            {typeData.map((item) => {
+              if(item.id===id)
+                return item.fields.map((it) => {
+                  return (
+                    <div key={it}className='add-entry-input'>
+                      <label key={it}>{it}</label>
+                      <input name={it} type="text" id={it} />
+                    </div>
+                  );
+                });
+            })
+            }
+            <button id="add-entry-btn">Add</button>
+          </div>
+        </form>}
+        {showUpdateEntry && 
+        <form onSubmit={handleUpdateNewEntrySubmit}>
           <div className='add-entry'>
             {typeData.map((item) => {
               if(item.id===id)
@@ -111,7 +164,7 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
                     })
                   }
                   <div className="edit-options">
-                    <img src={require('../../assets/user-edit-text-message-note_2023-03-09/user-edit-text-message-note.png')} alt="" />
+                    <img onClick={()=>handleUpdateEntry(item.id)}src={require('../../assets/user-edit-text-message-note_2023-03-09/user-edit-text-message-note.png')} alt="" />
                     <img onClick={()=>handleEntryDelete(item.id)} src={require('../../assets/trash-delete-recycle-bin-bucket-waste_2023-03-09/trash-delete-recycle-bin-bucket-waste.png')} alt="" />
                   </div>
                 </div>

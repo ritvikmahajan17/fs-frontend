@@ -71,3 +71,10 @@ export const POST_ENTRIES_DATA_BY_TYPE  = (id) => {
   };
 };
 
+export const UPDATE_ENTRIES_DATA_BY_TYPE  = (id) => {
+  return {
+    url:`/entity/${id}`,
+    method:'patch'
+  };
+};
+
