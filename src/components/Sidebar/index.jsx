@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
+import { TOKEN } from '../../constants/accessToken';
 import { GET_TYPE_DATA } from '../../constants/apiEndPoints';
 import makeRequest from '../../utils/makeRequest/makeRequest';
 import { ContentType } from '../ContentType';
@@ -29,7 +30,7 @@ export const Sidebar = () => {
 
   useEffect(() => {
     makeRequest(GET_TYPE_DATA,{
-      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' }
+      headers: { Authorization: TOKEN }
     })
       .then((response) => {
         console.log(response);

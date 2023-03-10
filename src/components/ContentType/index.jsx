@@ -1,18 +1,33 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Fields } from '../Fields';
 import './ContentType.css';
 import PropTypes from 'prop-types';
 import { Modal } from '../Modal';
 import makeRequest from '../../utils/makeRequest/makeRequest';
-import { POST_TYPE } from '../../constants/apiEndPoints';
+import { GET_ENTRY_NUMBER_BY_TYPE, POST_TYPE } from '../../constants/apiEndPoints';
+import { TOKEN } from '../../constants/accessToken';
 
 export const ContentType = ({typeData,setTypeData}) => {
 
   const [fieldName, setFieldName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [newType, setNewType] = useState('');
+  const [entryNumber, setEntryNumber] = useState([{}]);
+
+
+  useEffect(() => {
+    makeRequest(GET_ENTRY_NUMBER_BY_TYPE,{
+      headers: { Authorization: TOKEN }
+    })
+      .then((response) => {
+        console.log(response);
+        setEntryNumber(response);
+      });
+  },[]);
+      
+
 
   const handleClick = (name) => {
     
@@ -31,7 +46,7 @@ export const ContentType = ({typeData,setTypeData}) => {
     }
 
     makeRequest(POST_TYPE,{
-      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' },
+      headers: { Authorization: TOKEN },
       data: { typeName: newType }
     })
       .then((response) => {
@@ -47,6 +62,15 @@ export const ContentType = ({typeData,setTypeData}) => {
 
   const handleNewTypeInput = (e) => {
     setNewType(e.target.value);
+  };
+
+  const getEntryNumber = (typeId) => {
+    const result = entryNumber.filter((entry) => entry.typeId === typeId);
+    console.log(result);
+    if(result.length === 0)
+      return 0;
+    // console.log(result[0].count);  
+    return result[0].count;
   };
 
   
@@ -73,7 +97,7 @@ export const ContentType = ({typeData,setTypeData}) => {
           {/* <div className="body-left-content">
             <ul className='left-list'> */}
           {typeData.map(item=>{
-            return <div onClick={()=>handleClick(item.typeName)} id="list-content" key={item.id} ><a name={item.typeName}>{item.typeName}</a><a>13</a></div>;
+            return <div onClick={()=>handleClick(item.typeName)} id="list-content" key={item.id} ><a name={item.typeName}>{item.typeName}</a><a>{getEntryNumber(item.id)}</a></div>;
           }
           )}
 

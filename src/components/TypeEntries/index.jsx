@@ -4,6 +4,7 @@ import './TypeEntries.css';
 import propTypes from 'prop-types';
 import makeRequest from '../../utils/makeRequest/makeRequest';
 import { DELETE_ENTRIES_DATA_BY_ID, GET_ENTRIES_DATA_BY_TYPE, POST_ENTRIES_DATA_BY_TYPE, UPDATE_ENTRIES_DATA_BY_TYPE } from '../../constants/apiEndPoints';
+import { TOKEN } from '../../constants/accessToken';
 
 export const TypeEntries = ({id,name,typeData,setTypeData}) => {
   console.log(id,'id',name,'name');
@@ -12,9 +13,10 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
   const [showAddEntry,setShowAddEntry] = useState(false);
   const [showUpdateEntry,setShowUpdateEntry] = useState(false);
   const [entryId,setEntryId] = useState('');
+  const [entryData,setEntryData] = useState({});
   useEffect(() => {
     makeRequest(GET_ENTRIES_DATA_BY_TYPE(id),{
-      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' }
+      headers: { Authorization: TOKEN }
     })
       .then((response) => {
         console.log(response,'response');
@@ -25,20 +27,24 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
   const handleEntryDelete = (id) => {
     console.log(id,'id');
     makeRequest(DELETE_ENTRIES_DATA_BY_ID(id),{
-      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' }
+      headers: { Authorization: TOKEN }
     });
     const newEntriesData = entriesData.filter((item) => item.id !== id);
     setEntriesData(newEntriesData);
   };
 
-  const handleUpdateEntry = (id) => {
+  const handleUpdateEntry = (id,data) => {
     setShowUpdateEntry(!showUpdateEntry);
     setEntryId(id);
+    setEntryData(data);
+    console.log(id,'id',data,'data');
+    setShowAddEntry(false);
   };
 
 
   const handleAddNewEntry = () => {
     setShowAddEntry(!showAddEntry);
+    setShowUpdateEntry(false);
   };
 
   const handleAddNewEntrySubmit = (e) => {
@@ -52,7 +58,7 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
         });
     });
     makeRequest(POST_ENTRIES_DATA_BY_TYPE(id),{
-      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' },
+      headers: { Authorization: TOKEN },
       data: {...data}
     })
       .then((response) => {
@@ -60,8 +66,7 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
         setEntriesData([...entriesData,response]);
       });
 
-
-    console.log(data.get('fname'));
+    setShowAddEntry(false);
   };
 
   const handleUpdateNewEntrySubmit = (e) => {
@@ -74,7 +79,7 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
         });
     });
     makeRequest(UPDATE_ENTRIES_DATA_BY_TYPE(entryId),{
-      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' },
+      headers: { Authorization: TOKEN },
       data: {...data}
     })
       .then((response) => {
@@ -82,11 +87,12 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
         const index = entriesData.findIndex((item) => item.id === entryId);
         console.log(index,'index');
         console.log(entriesData[index].data,'entries[index].data');
-        {entriesData[index].data = {...data};}
+        entriesData[index].data = data;
+
 
         setEntriesData([...entriesData]);
 
-       
+        setShowUpdateEntry(false);
       });
   };
 
@@ -100,7 +106,7 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
       </div>
       <div className='entries-body'>
         <div className='entries-body-header'>
-          <a id='entries-body-heading'>Fields</a>
+          <a id='entries-body-heading'>{entriesData.length} Entries Found</a>
           <a onClick={handleAddNewEntry} id="add-entry-btn">Add a new entry</a>
         </div>
         {showAddEntry && 
@@ -130,13 +136,13 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
                   return (
                     <div key={it}className='add-entry-input'>
                       <label key={it}>{it}</label>
-                      <input name={it} type="text" id={it} />
+                      <input name={it} type="text" value={entryData[it]}  id={it} />
                     </div>
                   );
                 });
             })
             }
-            <button id="add-entry-btn">Add</button>
+            <button id="add-entry-btn">Update</button>
           </div>
         </form>}
         <div className='entries-body-content'>
@@ -164,7 +170,7 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
                     })
                   }
                   <div className="edit-options">
-                    <img onClick={()=>handleUpdateEntry(item.id)}src={require('../../assets/user-edit-text-message-note_2023-03-09/user-edit-text-message-note.png')} alt="" />
+                    <img onClick={()=>handleUpdateEntry(item.id,item.data)}src={require('../../assets/user-edit-text-message-note_2023-03-09/user-edit-text-message-note.png')} alt="" />
                     <img onClick={()=>handleEntryDelete(item.id)} src={require('../../assets/trash-delete-recycle-bin-bucket-waste_2023-03-09/trash-delete-recycle-bin-bucket-waste.png')} alt="" />
                   </div>
                 </div>

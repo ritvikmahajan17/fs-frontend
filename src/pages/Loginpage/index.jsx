@@ -19,6 +19,10 @@ export const Loginpage =  () => {
     setPassword(e.target.value);
   };
 
+  const handleRegisterClick = () => {
+    navigate('/register');
+  };
+
   const handleLoginClick = () => {
     
     console.log(email,password);
@@ -29,7 +33,7 @@ export const Loginpage =  () => {
       .then((response) => {
         if(response.accessToken){
           localStorage.setItem('token', response.accessToken);
-          navigate('/home');
+          navigate('/');
         }
         else{
           alert('Invalid Credentials');
@@ -68,6 +72,7 @@ export const Loginpage =  () => {
             Login
           </button>
           <a>Forgot Password?</a>
+          <a onClick={handleRegisterClick}>Register</a>
         </div>
       </div>
     </div>

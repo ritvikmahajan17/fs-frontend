@@ -5,6 +5,7 @@ import './Fields.css';
 import PropTypes from 'prop-types';
 import makeRequest from '../../utils/makeRequest/makeRequest';
 import { DELETE_FIELD_BY_TYPENAME, GET_TYPE_DATA_BY_NAME, PUT_EDIT_FIELD_BY_TYPENAME, PUT_FIELD_BY_TYPENAME } from '../../constants/apiEndPoints';
+import { TOKEN } from '../../constants/accessToken';
 
 export const Fields = ({fieldName,setFieldName}) => {
 
@@ -19,13 +20,13 @@ export const Fields = ({fieldName,setFieldName}) => {
   });
 
   const handleAddField = () => {
-    setShowAddField(true);
+    setShowAddField(!showAddField);
   };
 
   const handleAddFieldButton = () => {
     console.log('add field button clicked');
     makeRequest(PUT_FIELD_BY_TYPENAME(fieldName),{
-      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' },
+      headers: { Authorization: TOKEN },
       data: { field:newField }
     })
       .then(response=>{
@@ -52,7 +53,7 @@ export const Fields = ({fieldName,setFieldName}) => {
   const handleFieldEditButton = (item) => {
     console.log(item);
     makeRequest(PUT_EDIT_FIELD_BY_TYPENAME(fieldName),{
-      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' },
+      headers: { Authorization: TOKEN },
       data: { oldField:editField,
         newField:newField }
     })
@@ -68,7 +69,7 @@ export const Fields = ({fieldName,setFieldName}) => {
   const handleFieldDelete = (item) => {
     console.log(item);
     makeRequest(DELETE_FIELD_BY_TYPENAME(fieldName),{
-      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' },
+      headers: { Authorization: TOKEN },
       data: { field:item
       }
     })
@@ -84,7 +85,7 @@ export const Fields = ({fieldName,setFieldName}) => {
   };
   useEffect(() => {
     makeRequest(GET_TYPE_DATA_BY_NAME(fieldName),{
-      headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdHZpa0BnbWFpbC5jb20iLCJpYXQiOjE2NzgzNzk2MTYsImV4cCI6MTY3ODU1MjQxNn0.DZQULkCxlCnZVPmT8dAkBc6f0p08YNzRpaoEqOnuyaE' },
+      headers: { Authorization: TOKEN },
     })
       .then((response) => {
         console.log(response.fields);

@@ -29,6 +29,11 @@ export const POST_TYPE = {
   method:'post'
 };
 
+export const GET_ENTRY_NUMBER_BY_TYPE = {
+  url:'/entity',
+  method:'get'
+};
+
 export const PUT_FIELD_BY_TYPENAME = (name) => {
   return {
     url:`/type/${name}`,
