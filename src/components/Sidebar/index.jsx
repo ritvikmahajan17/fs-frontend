@@ -3,12 +3,29 @@ import React, { useEffect, useState } from 'react';
 import { GET_TYPE_DATA } from '../../constants/apiEndPoints';
 import makeRequest from '../../utils/makeRequest/makeRequest';
 import { ContentType } from '../ContentType';
+import { TypeEntries } from '../TypeEntries';
 import './Sidebar.css';
 
 export const Sidebar = () => {
+
+  const [showContentType, setShowContentType] = useState('contentType');
+  const [typeId, setTypeId] = useState(0);
+  const [typeName, setTypeName] = useState('');
     
   const [typeData,setTypeData] = useState([]);
-  const [showContent, setShowContent] = useState(true);
+  //   const [showContent, setShowContent] = useState(true);
+
+  const handleShowContent = () => {
+    setShowContentType('contentType');
+  };
+
+  const handleEntryTypeClick = (id,name) => {
+    console.log(id);
+    setTypeId(id);
+    setTypeName(name);
+    setShowContentType('typeEntries');
+  };
+  // setShowContent(false);
 
   useEffect(() => {
     makeRequest(GET_TYPE_DATA,{
@@ -34,18 +51,22 @@ export const Sidebar = () => {
           <div className="content">
             <ul className='content'>
               {typeData.map(item=>{
-                return <li key={item.id} id="sidebar-list">{item.typeName}</li>;
+                return <li key={item.id} onClick={()=>handleEntryTypeClick(item.id,item.typeName)} id="sidebar-list">{item.typeName}</li>;
               })
               }
             </ul>
           </div>
           <div className="">
-            <a><b>CONTENT TYPES</b></a>
+            <a onClick={handleShowContent}><b>CONTENT TYPES</b></a>
           </div> 
         </div>
         
       </div>
-      <ContentType key={1}typeData={typeData} setTypeData={setTypeData}/>
+      {showContentType==='contentType' &&
+      <ContentType key={typeId}typeData={typeData} setTypeData={setTypeData}/>
+      }
+      {showContentType==='typeEntries' &&
+      <TypeEntries key={typeId} id ={typeId} name={typeName}typeData={typeData} setTypeData={setTypeData}/>}
     </div>
   );
 };

@@ -49,3 +49,25 @@ export const DELETE_FIELD_BY_TYPENAME = (name) => {
     method:'delete'
   };
 };
+
+export const GET_ENTRIES_DATA_BY_TYPE  = (id) => {
+  return {
+    url:`/entity/${id}`,
+    method:'get'
+  };
+};
+
+export const DELETE_ENTRIES_DATA_BY_ID  = (id) => {
+  return {
+    url:`/entity/${id}`,
+    method:'delete'
+  };
+};
+
+export const POST_ENTRIES_DATA_BY_TYPE  = (id) => {
+  return {
+    url:`/entity/${id}`,
+    method:'post'
+  };
+};
+
