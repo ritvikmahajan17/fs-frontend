@@ -5,6 +5,7 @@ import propTypes from 'prop-types';
 import makeRequest from '../../utils/makeRequest/makeRequest';
 import { DELETE_ENTRIES_DATA_BY_ID, GET_ENTRIES_DATA_BY_TYPE, POST_ENTRIES_DATA_BY_TYPE, UPDATE_ENTRIES_DATA_BY_TYPE } from '../../constants/apiEndPoints';
 import { TOKEN } from '../../constants/accessToken';
+import { isEditable } from '@testing-library/user-event/dist/utils';
 
 export const TypeEntries = ({id,name,typeData,setTypeData}) => {
   console.log(id,'id',name,'name');
@@ -136,7 +137,7 @@ export const TypeEntries = ({id,name,typeData,setTypeData}) => {
                   return (
                     <div key={it}className='add-entry-input'>
                       <label key={it}>{it}</label>
-                      <input name={it} type="text" placeholder={entryData[it]}  id={it} />
+                      <input name={it} type="text" value={entryData[it]} onChange={(e) => setEntryData({...entryData, [it]: e.target.value})}  id={it} />
                     </div>
                   );
                 });
